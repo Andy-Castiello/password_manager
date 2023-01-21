@@ -1,0 +1,39 @@
+@import '../../../variables.scss';
+
+.bar-body {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+}
+.bar-rail {
+	max-width: 1.4rem;
+	min-height: 61rem;
+	border-radius: 0.3rem;
+	margin: 0 1rem;
+	background-color: $dark-background3;
+}
+.bar-selector {
+	min-width: 2rem;
+    min-height: .7rem;
+    background-color: $blue-color2;
+    box-shadow: 0 0 10px rgba($blue-color2, .8);
+	border-radius: .1rem;
+    position: relative;
+    left: -0.3rem;
+    top: 0.1rem;
+	cursor: pointer;
+}
+.bar-image {
+	height: 60.2rem;
+	width: auto;
+}
+.bar-numbers {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-self: stretch;
+
+	font-size: 1.1rem;
+	color: $blue-color2;
+	text-shadow:0 0 10px rgba($blue-color2, .7);
+}

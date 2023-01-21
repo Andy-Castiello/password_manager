@@ -1,8 +1,12 @@
-import React from 'react';
-/* import './App.css'; */
+import Container from './Container/Container';
+import './App.scss';
 
 const App = () => {
-	return <div>Aca esta la app papa</div>;
+	return (
+		<div className="main-component">
+			<Container />
+		</div>
+	);
 };
 
 export default App;

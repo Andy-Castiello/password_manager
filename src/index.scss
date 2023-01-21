@@ -1,3 +1,28 @@
-body{
+@import 'variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
 
+//=============NORMALIZE=================
+*,
+*::after,
+*::before {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	user-select: none;
+	color: $blue-color2;
+	text-shadow: 0 0 10px rgba($blue-color2, .7);
+}
+html {
+	font-size: 62.5%;
+	font-family: 'Inter', 'sans-serif';
+}
+body {
+	background-color: $dark-background1;
+}
+.text-input{
+
+	background-color: $dark-background3;
+	padding: 1rem;
+	border-radius: .5rem;
+	border: none;
 }
