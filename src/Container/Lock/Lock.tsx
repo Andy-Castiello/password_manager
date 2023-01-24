@@ -56,6 +56,9 @@ const Lock = () => {
 		}
 	};
 	const turnLock = (event: MouseEvent) => {
+		if (lastTimeOut) {
+			clearTimeout(lastTimeOut);
+		}
 		if (event.target instanceof HTMLDivElement) {
 			const lock = event.target as HTMLDivElement;
 
@@ -114,12 +117,11 @@ const Lock = () => {
 			};
 			document.addEventListener('mousemove', MouseMove);
 			document.onmouseup = () => {
-				if (lastTimeOut) {
-					clearTimeout(lastTimeOut);
-				}
-				setLastTimeOut(setTimeout(() => {
-					setKey();
-				}, 1000));
+				setLastTimeOut(
+					setTimeout(() => {
+						setKey();
+					}, 1000)
+				);
 				document.removeEventListener('mousemove', MouseMove);
 				document.onmouseup = null;
 			};
@@ -133,9 +135,12 @@ const Lock = () => {
 		} else if (key3 === null) {
 			setKey3(position === 0 ? 0 : 60 - position);
 		}
-        clearTimeout(lastTimeOut!);
+		clearTimeout(lastTimeOut!);
 	};
 	const Reset = () => {
+		if (lastTimeOut) {
+			clearTimeout(lastTimeOut);
+		}
 		setKey1(null);
 		setKey2(null);
 		setKey3(null);

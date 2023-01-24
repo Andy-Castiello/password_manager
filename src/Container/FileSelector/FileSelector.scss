@@ -1,6 +1,4 @@
 .file-selector {
-	min-width: 30rem;
-	min-height: 30rem;
 	grid-area: 1/2/2/3;
 	display: flex;
 	flex-direction: column;
@@ -12,7 +10,6 @@
 		&__text{
 
 			flex-grow: 1;
-			outline: none;
 		}
 		&__file {
 			display: none;

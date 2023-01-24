@@ -66,7 +66,7 @@ const Bar = () => {
 			/>
 			<div className="bar-numbers">
 				{numbers.map((n) => (
-					<span className="bar-number">{n}</span>
+					<span className="bar-number" key={n}>{n}</span>
 				))}
 			</div>
 		</div>
