@@ -1,39 +1,36 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
 
-.button{
+.button {
+	background-color: $dark-background3;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	text-align: center;
+	cursor: pointer;
+	&--pressed {
+		background-color: $blue-color2;
+		box-shadow: 0 0 15px rgba($blue-color2, 0.6);
 
-    background-color: $dark-background3;
-    padding: 1rem;
-    border-radius: .5rem;
-    text-align: center;
-    cursor: pointer;
-    &--pressed{
-
-        background-color: $blue-color2;
-        box-shadow: 0 0 15px rgba($blue-color2, .6);
-
-        &>span{
-
-
-            color: $dark-background3;
-            text-shadow: none;
-        }
-    }
-    &--disabled{
-
-        background-color: $blue-color2;
-        box-shadow: 0 0 15px rgba($blue-color2, .6);
-
-        &>span{
-
-
-            color: $dark-background3;
-            text-shadow: none;
-        }
-    }
-    &:hover{
-
-        transition: ease-out;
-        transform: translateY(-1px);
-    }
+		& * {
+			color: $dark-background3;
+			text-shadow: none;
+		}
+	}
+	&--disabled {
+		background-color: $dark-background2;
+		box-shadow: none;
+		& * {
+			color: $blue-color1;
+			text-shadow: none;
+		}
+	}
+	&:active {
+		transition: ease-out;
+		transform: translateY(1px);
+		background-color: $dark-background2;
+		box-shadow: none;
+		& * {
+			color: $blue-color1;
+			text-shadow: none;
+		}
+	}
 }

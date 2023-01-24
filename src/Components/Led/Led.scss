@@ -1,0 +1,25 @@
+@import "../../variables.scss";
+
+.led{
+
+    width: 1.2rem;
+    height: 2.5rem;
+    border-radius: .2rem;
+    background-color: $dark-background2;
+
+    &--BLUE{
+
+        background-color: $blue-color2;
+        box-shadow: 0px 0px 4px rgba($blue-color2, .8);
+    }
+    &--GREEN{
+
+        background-color: $green-light;
+        box-shadow: 0px 0px 4px rgba($green-light, .8);
+    }
+    &--RED{
+
+        background-color: $red-light;
+        box-shadow: 0px 0px 4px rgba($red-light, .8);
+    }
+}

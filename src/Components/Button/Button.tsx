@@ -1,8 +1,10 @@
 import './Button.scss';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 type props = {
-	text: string;
+	push?: boolean;
+	children?: React.ReactNode;
+	onClick?: Function;
 };
 enum states {
 	NORMAL = 'NORMAL',
@@ -10,22 +12,27 @@ enum states {
 	DISABLED = 'DISABLED',
 }
 
-const Button = ({ text }: props) => {
+const Button = ({ push = true, children, onClick }: props) => {
 	const [state, setState] = useState(states.NORMAL);
 
 	const handleClick = () => {
-		state == states.NORMAL
-			? setState(states.PRESSED)
-			: setState(states.NORMAL);
+		if (onClick) onClick();
+
+		if (!push) {
+			state === states.NORMAL
+				? setState(states.PRESSED)
+				: setState(states.NORMAL);
+		}
 	};
 	return (
 		<div
 			className={
-				'button' + (state == states.NORMAL ? '' : ' button--pressed')
+				'button' +
+				(push || state === states.NORMAL ? '' : ' button--pressed')
 			}
 			onClick={handleClick}
 		>
-			<span>{text}</span>
+			<span>{children}</span>
 		</div>
 	);
 };

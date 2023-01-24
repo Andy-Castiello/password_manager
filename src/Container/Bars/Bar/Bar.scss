@@ -4,6 +4,7 @@
 	display: flex;
 	align-items: center;
 	gap: 0.3rem;
+	align-self: center;
 }
 .bar-rail {
 	max-width: 1.4rem;
@@ -25,7 +26,8 @@
 }
 .bar-image {
 	height: 60.2rem;
-	width: auto;
+	width: 1rem;
+	background-size: cover;
 }
 .bar-numbers {
 	display: flex;

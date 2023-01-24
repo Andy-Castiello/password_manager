@@ -18,8 +18,9 @@ const Bar = () => {
 	};
 
 	const min = 0.1;
-	const max = 60.2;
-	const step = max / 100;
+	const length = 60.1;
+	const max = min + length;
+	const step = length / 100;
 
 	const moveSelector = (event: MouseEvent) => {
 		const initialY = event.clientY;
@@ -34,15 +35,15 @@ const Bar = () => {
 			const MouseMove = (e: any) => {
 				let newPos = initialSelectorPosition + e.clientY - initialY;
 				if (newPos <= convertRemToPixels(min)) {
-					selector.style.top = `${convertRemToPixels(0.1)}px`;
+					selector.style.top = `${convertRemToPixels(min)}px`;
 					newPos = 0;
-				} else if (newPos >= convertRemToPixels(max)) {
+				} else if (newPos >= convertRemToPixels(length)) {
 					selector.style.top = `${convertRemToPixels(max)}px`;
 					newPos = 100;
 				} else {
 					newPos = Math.floor(newPos / convertRemToPixels(step));
 					selector.style.top = `${
-						newPos * convertRemToPixels(step)
+						convertRemToPixels(newPos *step+min)
 					}px`;
 				}
 				setPosition(newPos);
@@ -59,7 +60,10 @@ const Bar = () => {
 			<div className="bar-rail">
 				<div className="bar-selector" onMouseDown={moveSelector}></div>
 			</div>
-			<img className="bar-image" src={barImage} />
+			<div
+				className="bar-image"
+				style={{ backgroundImage: `url(${barImage})` }}
+			/>
 			<div className="bar-numbers">
 				{numbers.map((n) => (
 					<span className="bar-number">{n}</span>
