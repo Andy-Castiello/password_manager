@@ -1,7 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import accessValues from './slices/accessValues/accessValuesSlice';
 
 export const store = configureStore({
-	reducer: {},
+	reducer: {
+		accessValues
+	},
 });
 
 export type AppDispatch = typeof store.dispatch;

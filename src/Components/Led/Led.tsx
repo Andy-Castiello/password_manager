@@ -1,16 +1,11 @@
 import './Led.scss';
 
-enum colors {
-	BLUE = 'BLUE',
-	GREEN = 'GREEN',
-	RED = 'RED',
-}
 type props = {
 	on?: boolean;
-	color: string;
+	color: 'BLUE'| 'GREEN' | 'RED';
 };
 
-const Led = ({ on=true, color }: props) => {
+const Led = ({ on = true, color }: props) => {
 	return <div className={'led' + (on ? ' led--' + color : '')} />;
 };
 

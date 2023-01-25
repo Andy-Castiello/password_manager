@@ -1,16 +1,20 @@
 import Led from '../../Components/Led/Led';
 import Button from '../../Components/Button/Button';
-import { MouseEvent, useState } from 'react';
-import moment from 'moment';
+import { MouseEvent, useState, useRef } from 'react';
 import './Lock.scss';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+	resetLock,
+	setLockValue,
+} from '../../store/slices/accessValues/accessValuesSlice';
 
 const lockImage = require('../../assets/lock-image.png');
 
 const Lock = () => {
-	const [position, setPosition] = useState<number>(0);
-	const [key1, setKey1] = useState<number | null>(null);
-	const [key2, setKey2] = useState<number | null>(null);
-	const [key3, setKey3] = useState<number | null>(null);
+	const values = useAppSelector((state) => state.accessValues.lock);
+	const dispatch = useAppDispatch();
+
+	const position = useRef<number>(0);
 	const [lastTimeOut, setLastTimeOut] = useState<NodeJS.Timeout | null>(null);
 	const step = 6;
 
@@ -77,6 +81,7 @@ const Lock = () => {
 				center.X,
 				center.Y
 			);
+			const initialPos = position.current;
 
 			const MouseMove = (e: any) => {
 				const actualPos = calcAngleDegrees(
@@ -110,17 +115,17 @@ const Lock = () => {
 							step
 					);
 				}
-				newPos += position;
+				newPos += initialPos;
 				if (newPos >= 60) newPos %= 60;
 				lock.style.transform = `rotate(${newPos * step}deg)`;
-				setPosition(newPos);
+				position.current = newPos;
 			};
 			document.addEventListener('mousemove', MouseMove);
 			document.onmouseup = () => {
 				setLastTimeOut(
 					setTimeout(() => {
 						setKey();
-					}, 1000)
+					}, 400)
 				);
 				document.removeEventListener('mousemove', MouseMove);
 				document.onmouseup = null;
@@ -128,12 +133,27 @@ const Lock = () => {
 		}
 	};
 	const setKey = () => {
-		if (key1 === null) {
-			setKey1(position === 0 ? 0 : 60 - position);
-		} else if (key2 === null) {
-			setKey2(position === 0 ? 0 : 60 - position);
-		} else if (key3 === null) {
-			setKey3(position === 0 ? 0 : 60 - position);
+		if (values[0] === null) {
+			dispatch(
+				setLockValue({
+					key: 0,
+					value: position.current === 0 ? 0 : 60 - position.current,
+				})
+			);
+		} else if (values[1] === null) {
+			dispatch(
+				setLockValue({
+					key: 1,
+					value: position.current === 0 ? 0 : 60 - position.current,
+				})
+			);
+		} else if (values[2] === null) {
+			dispatch(
+				setLockValue({
+					key: 2,
+					value: position.current === 0 ? 0 : 60 - position.current,
+				})
+			);
 		}
 		clearTimeout(lastTimeOut!);
 	};
@@ -141,9 +161,7 @@ const Lock = () => {
 		if (lastTimeOut) {
 			clearTimeout(lastTimeOut);
 		}
-		setKey1(null);
-		setKey2(null);
-		setKey3(null);
+		dispatch(resetLock());
 	};
 	return (
 		<div className="lock">
@@ -159,9 +177,24 @@ const Lock = () => {
 			}
 			<div className="lock__panel">
 				<div className="lock__panel__leds">
-					<Led color={'BLUE'} on={key1 !== null} />
-					<Led color={'BLUE'} on={key2 !== null} />
-					<Led color={'BLUE'} on={key3 !== null} />
+					<div className="lock__panel__leds__led">
+						<span className="lock__panel__leds__led__number">
+							{values[0]}
+						</span>
+						<Led color={'BLUE'} on={values[0] !== null} />
+					</div>
+					<div className="lock__panel__leds__led">
+						<span className="lock__panel__leds__led__number">
+							{values[1]}
+						</span>
+						<Led color={'BLUE'} on={values[1] !== null} />
+					</div>
+					<div className="lock__panel__leds__led">
+						<span className="lock__panel__leds__led__number">
+							{values[2]}
+						</span>
+						<Led color={'BLUE'} on={values[2] !== null} />
+					</div>
 				</div>
 				<Button onClick={Reset}>RESET</Button>
 			</div>

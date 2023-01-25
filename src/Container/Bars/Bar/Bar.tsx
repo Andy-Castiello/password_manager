@@ -1,10 +1,18 @@
 import './Bar.scss';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { setBarValue } from '../../../store/slices/accessValues/accessValuesSlice';
 
 const barImage = require('../../../assets/bar.png');
 
-const Bar = () => {
-	const [position, setPosition] = useState(0);
+type props = {
+	barId: number;
+};
+
+const Bar = ({ barId }: props) => {
+	const value = useAppSelector((state) => state.accessValues.bars[barId]);
+	const dispatch = useAppDispatch();
+
 	let numbers = [];
 	for (let i = 0; i <= 10; i++) {
 		numbers.push(i * 10);
@@ -42,11 +50,11 @@ const Bar = () => {
 					newPos = 100;
 				} else {
 					newPos = Math.floor(newPos / convertRemToPixels(step));
-					selector.style.top = `${
-						convertRemToPixels(newPos *step+min)
-					}px`;
+					selector.style.top = `${convertRemToPixels(
+						newPos * step + min
+					)}px`;
 				}
-				setPosition(newPos);
+				dispatch(setBarValue({ barId, value: newPos }));
 			};
 			document.addEventListener('mousemove', MouseMove);
 			document.onmouseup = () => {
@@ -58,6 +66,7 @@ const Bar = () => {
 	return (
 		<div className="bar-body">
 			<div className="bar-rail">
+				<span className="bar-rail__number">{value}</span>
 				<div className="bar-selector" onMouseDown={moveSelector}></div>
 			</div>
 			<div
@@ -66,7 +75,9 @@ const Bar = () => {
 			/>
 			<div className="bar-numbers">
 				{numbers.map((n) => (
-					<span className="bar-number" key={n}>{n}</span>
+					<span className="bar-number" key={n}>
+						{n}
+					</span>
 				))}
 			</div>
 		</div>
