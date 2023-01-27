@@ -1,9 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import accessValues from './slices/accessValues/accessValuesSlice';
+import accessValues from './slices/accessValues/accessValues';
+import accessPanel from './slices/accessPanel/accessPanel';
+import globalState from './slices/global/globalState';
 
 export const store = configureStore({
 	reducer: {
-		accessValues
+		accessValues,
+		accessPanel,
+		globalState
 	},
 });
 

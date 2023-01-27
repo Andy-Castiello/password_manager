@@ -25,4 +25,3 @@ yarn-error.log*
 #===========
 .prettierrc.json
 .gitignore
-/src2

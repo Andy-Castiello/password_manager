@@ -6,12 +6,14 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
 	resetLock,
 	setLockValue,
-} from '../../store/slices/accessValues/accessValuesSlice';
+} from '../../store/slices/accessValues/accessValues';
 
 const lockImage = require('../../assets/lock-image.png');
+const lockImageDisabled = require('../../assets/lock-image-disabled.png');
 
 const Lock = () => {
 	const values = useAppSelector((state) => state.accessValues.lock);
+	const accessPanelState = useAppSelector((state) => state.accessPanel.state);
 	const dispatch = useAppDispatch();
 
 	const position = useRef<number>(0);
@@ -169,34 +171,64 @@ const Lock = () => {
 				<div className="lock__wheel">
 					<div className="lock__wheel__indicator" />
 					<div
-						style={{ backgroundImage: `url(${lockImage})` }}
+						style={{
+							backgroundImage: `url(${
+								accessPanelState === 'disabled'
+									? lockImageDisabled
+									: lockImage
+							})`,
+						}}
 						className="lock__wheel__wheel"
-						onMouseDown={turnLock}
+						onMouseDown={
+							accessPanelState === 'normal' ||
+							accessPanelState === 'edit'
+								? turnLock
+								: undefined
+						}
 					/>
 				</div>
 			}
 			<div className="lock__panel">
 				<div className="lock__panel__leds">
 					<div className="lock__panel__leds__led">
-						<span className="lock__panel__leds__led__number">
-							{values[0]}
-						</span>
+						{accessPanelState === 'edit' ? (
+							<span className="lock__panel__leds__led__number">
+								{values[0]}
+							</span>
+						) : (
+							<></>
+						)}
 						<Led color={'BLUE'} on={values[0] !== null} />
 					</div>
 					<div className="lock__panel__leds__led">
-						<span className="lock__panel__leds__led__number">
-							{values[1]}
-						</span>
+						{accessPanelState === 'edit' ? (
+							<span className="lock__panel__leds__led__number">
+								{values[1]}
+							</span>
+						) : (
+							<></>
+						)}
 						<Led color={'BLUE'} on={values[1] !== null} />
 					</div>
 					<div className="lock__panel__leds__led">
-						<span className="lock__panel__leds__led__number">
-							{values[2]}
-						</span>
+						{accessPanelState === 'edit' ? (
+							<span className="lock__panel__leds__led__number">
+								{values[2]}
+							</span>
+						) : (
+							<></>
+						)}
 						<Led color={'BLUE'} on={values[2] !== null} />
 					</div>
 				</div>
-				<Button onClick={Reset}>RESET</Button>
+				<Button
+					onClick={Reset}
+					state={
+						accessPanelState === 'disabled' ? 'disabled' : 'normal'
+					}
+				>
+					RESET
+				</Button>
 			</div>
 		</div>
 	);

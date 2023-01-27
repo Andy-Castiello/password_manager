@@ -13,8 +13,7 @@
 	margin: 0 1rem;
 	background-color: $dark-background3;
 	position: relative;
-	&__number{
-
+	&__number {
 		position: absolute;
 		display: flex;
 		align-items: center;
@@ -22,28 +21,31 @@
 		width: 3rem;
 		height: 3rem;
 		top: -3rem;
-		left: -.8rem;
+		left: -0.8rem;
 	}
 }
 .bar-selector {
 	min-width: 2rem;
-    min-height: .7rem;
-    background-color: $blue-color2;
-    box-shadow: 0 0 10px rgba($blue-color2, .8);
-	border-radius: .1rem;
-    position: relative;
-    left: -0.3rem;
-    top: 0.1rem;
+	min-height: 0.7rem;
+	background-color: $blue-color2;
+	box-shadow: 0 0 10px rgba($blue-color2, 0.8);
+	border-radius: 0.1rem;
+	position: relative;
+	left: -0.3rem;
+	top: 0.1rem;
 	cursor: pointer;
-	&::before{
-		content: "";
+	&::before {
+		content: '';
 		position: absolute;
 		display: block;
 		height: 100%;
 		width: 100%;
-		transform: scale(4,10);
+		transform: scale(4, 10);
 	}
-	
+	&--disabled {
+		background-color: $dark-background2;
+		box-shadow: none;
+	}
 }
 .bar-image {
 	height: 60.2rem;
@@ -56,7 +58,16 @@
 	justify-content: space-between;
 	align-self: stretch;
 
+	
+}
+.bar-number{
+
 	font-size: 1.1rem;
 	color: $blue-color2;
-	text-shadow:0 0 10px rgba($blue-color2, .7);
+	text-shadow: 0 0 10px rgba($blue-color2, 0.7);
+	
+	&--disabled {
+		color: $blue-color1;
+		text-shadow: none;
+	}
 }

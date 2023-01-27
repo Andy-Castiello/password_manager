@@ -5,7 +5,7 @@ import FileSelector from './FileSelector/FileSelector';
 import Lock from './Lock/Lock';
 import PasswordAccess from './PasswordAccess/PasswordAccess';
 
-const Container = () => {
+const AccessPanel = () => {
 	return (
 		<div className="container">
 			<Bars />
@@ -17,4 +17,4 @@ const Container = () => {
 	);
 };
 
-export default Container;
+export default AccessPanel;

@@ -2,10 +2,23 @@
 
 .button {
 	background-color: $dark-background3;
-	padding: 1rem;
+	padding: 1rem 2rem;
 	border-radius: 0.5rem;
 	text-align: center;
 	cursor: pointer;
+
+	&--normal {
+		&:active {
+			transition: ease-out;
+			transform: translateY(1px);
+			background-color: $dark-background2;
+			box-shadow: none;
+			& * {
+				color: $blue-color1;
+				text-shadow: none;
+			}
+		}
+	}
 	&--pressed {
 		background-color: $blue-color2;
 		box-shadow: 0 0 15px rgba($blue-color2, 0.6);
@@ -14,18 +27,18 @@
 			color: $dark-background3;
 			text-shadow: none;
 		}
-	}
-	&--disabled {
-		background-color: $dark-background2;
-		box-shadow: none;
-		& * {
-			color: $blue-color1;
-			text-shadow: none;
+		&:active {
+			transition: ease-out;
+			transform: translateY(1px);
+			background-color: $dark-background2;
+			box-shadow: none;
+			& * {
+				color: $blue-color1;
+				text-shadow: none;
+			}
 		}
 	}
-	&:active {
-		transition: ease-out;
-		transform: translateY(1px);
+	&--disabled {
 		background-color: $dark-background2;
 		box-shadow: none;
 		& * {
