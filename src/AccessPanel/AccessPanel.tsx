@@ -1,13 +1,13 @@
 import AccessButton from './AccessButton/AccessButton';
 import Bars from './Bars/Bars';
-import './Container.scss';
+import './AccessPanel.scss';
 import FileSelector from './FileSelector/FileSelector';
 import Lock from './Lock/Lock';
 import PasswordAccess from './PasswordAccess/PasswordAccess';
 
 const AccessPanel = () => {
 	return (
-		<div className="container">
+		<div className="access-panel">
 			<Bars />
 			<FileSelector />
 			<Lock />

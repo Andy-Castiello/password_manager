@@ -1,0 +1,6 @@
+.manager-panel {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	grid-template-rows: 1fr auto;
+	gap: 3rem;
+}
