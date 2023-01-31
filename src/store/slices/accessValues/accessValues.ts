@@ -1,6 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+export type accessValuesType = {
+	bars: number[];
+	lock: Array<number | null>;
+	password: string;
+	confirmPassword: string;
+};
+
+const initialState: accessValuesType = {
 	bars: [0, 0, 0, 0, 0],
 	lock: [null, null, null],
 	password: '',
@@ -20,7 +27,7 @@ const accessValuesSlice = createSlice({
 		resetLock: (state) => {
 			state.lock = [null, null, null];
 		},
-		resetAll: (state) => {
+		resetAccessValues: (state) => {
 			state.bars = initialState.bars;
 			state.lock = initialState.lock;
 			state.password = initialState.password;
@@ -42,5 +49,5 @@ export const {
 	resetLock,
 	setPassword,
 	setConfirmPassword,
-	resetAll,
+	resetAccessValues,
 } = accessValuesSlice.actions;

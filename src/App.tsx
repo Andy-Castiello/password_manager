@@ -7,8 +7,8 @@ const App = () => {
 	const panel = useAppSelector((state) => state.globalState.panel);
 	return (
 		<div className="main-component">
-			{/* {panel === 'access' ? <AccessPanel /> : <ManagerPanel />} */}
-			<ManagerPanel />
+			{panel === 'access' ? <AccessPanel /> : <ManagerPanel />}
+			{/* <ManagerPanel /> */}
 		</div>
 	);
 };

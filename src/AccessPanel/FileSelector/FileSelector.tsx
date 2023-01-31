@@ -9,28 +9,27 @@ import {
 	setFileName,
 	setOnEditCombination,
 } from '../../store/slices/accessPanel/accessPanel';
-import { resetAll } from '../../store/slices/accessValues/accessValues';
+import { resetAccessValues } from '../../store/slices/accessValues/accessValues';
 import crypto from 'simple-crypto-js';
-import {
-	setFileData,
-	setFileType,
-} from '../../store/slices/global/globalState';
+import { setFileData } from '../../store/slices/global/globalState';
+import { clearPasswordsList } from '../../store/slices/passwordListSlice/passwordListSlice';
 
 type state = 'normal' | 'new' | 'edit';
 
 const FileSelector = () => {
 	const [state, setState] = useState<state>('normal');
 	const accessPanelState = useAppSelector((state) => state.accessPanel.state);
-	const globalStateFile = useAppSelector(
+	/* const globalStateFile = useAppSelector(
 		(state) => state.globalState.fileType
-	);
+	); */
+	const panel = useAppSelector((state) => state.globalState.panel);
 	const fileName = useAppSelector((state) => state.accessPanel.fileName);
 	const dispatch = useAppDispatch();
 	const onEditCombination = useAppSelector(
 		(state) => state.accessPanel.onEditCombination
 	);
 	const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
-		dispatch(resetAll());
+		dispatch(resetAccessValues());
 		dispatch(
 			setFileName(
 				event.target.value
@@ -69,7 +68,7 @@ const FileSelector = () => {
 		dispatch(setFileName(event.target.value));
 	};
 	const handleNewClick = () => {
-		dispatch(resetAll());
+		dispatch(resetAccessValues());
 		dispatch(setFileName(''));
 		dispatch(setFileData(null));
 		dispatch(setOnEditCombination(false));
@@ -79,8 +78,8 @@ const FileSelector = () => {
 		}
 		if (state !== 'new') setState('new');
 		else setState('normal');
-		if (globalStateFile !== 'new') dispatch(setFileType('new'));
-		else dispatch(setFileType('none'));
+		/* if (globalStateFile !== 'new') dispatch(setFileType('new'));
+		else dispatch(setFileType('none')); */
 	};
 	const handleEditClick = () => {
 		if (state !== 'edit') {
@@ -88,17 +87,24 @@ const FileSelector = () => {
 			dispatch(setOnEditCombination(true));
 		} else {
 			setState('normal');
+			dispatch(clearPasswordsList());
+			dispatch(resetAccessValues());
+			dispatch(setFileName(''));
+			dispatch(setAccessPanelState('disabled'));
+			dispatch(setFileData(null));
 			dispatch(setOnEditCombination(false));
 		}
 	};
 	useEffect(() => {
-		if(onEditCombination){
-
+		if (onEditCombination) {
 			setState('edit');
-		}else{
+		} else if (panel === 'manager') {
+			setState('normal');
+			dispatch(setAccessPanelState('disabled'));
+		} else {
 			setState('normal');
 		}
-	},[onEditCombination]);
+	}, [onEditCombination, panel]);
 
 	return (
 		<div className="file-selector">
@@ -127,13 +133,25 @@ const FileSelector = () => {
 			<div className="file-selector__buttons">
 				<Button
 					onClick={handleNewClick}
-					state={state === 'new' ? 'pressed' : undefined}
+					state={
+						state === 'new'
+							? 'pressed'
+							: state === 'edit'
+							? 'disabled'
+							: undefined
+					}
 				>
 					NEW
 				</Button>
 				<Button
 					onClick={handleEditClick}
-					state={fileName==="" ||state==="new" ?"disabled":state === 'edit' ? 'pressed' : undefined}
+					state={
+						fileName === '' || state === 'new'
+							? 'disabled'
+							: state === 'edit'
+							? 'pressed'
+							: undefined
+					}
 				>
 					EDIT
 				</Button>

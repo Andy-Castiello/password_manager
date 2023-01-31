@@ -9,12 +9,12 @@ export type Password = {
 	lastUpdate: string;
 };
 
-type SliceType = {
+export type PasswordsListType = {
 	selected: number | null;
 	list: Password[];
 	nextId: number;
 };
-const initialState: SliceType = {
+const initialState: PasswordsListType = {
 	selected: null,
 	list: [],
 	nextId: 0,
@@ -36,6 +36,10 @@ const passwordListSlice = createSlice({
 			});
 			state.nextId++;
 		},
+		uploadPasswordData: (state, action) => {
+			state.list = action.payload.list;
+			state.nextId = action.payload.nextId;
+		},
 		editPassword: (state, action) => {
 			state.list[action.payload.id] = {
 				id: action.payload.id,
@@ -50,6 +54,11 @@ const passwordListSlice = createSlice({
 				(pass) => pass.id !== action.payload
 			);
 		},
+		clearPasswordsList: (state) => {
+			state.selected = initialState.selected;
+			state.list = initialState.list;
+			state.nextId = initialState.nextId;
+		},
 	},
 });
 
@@ -57,6 +66,8 @@ export default passwordListSlice.reducer;
 export const {
 	setSelectedPassword,
 	addPassword,
+	uploadPasswordData,
 	editPassword,
 	removePassword,
+	clearPasswordsList,
 } = passwordListSlice.actions;

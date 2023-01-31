@@ -9,11 +9,16 @@ import {
 	setOnEditCombination,
 } from '../../store/slices/accessPanel/accessPanel';
 import { setFileData, setPanel } from '../../store/slices/global/globalState';
-import { resetAll } from '../../store/slices/accessValues/accessValues';
+import { resetAccessValues } from '../../store/slices/accessValues/accessValues';
+import { uploadPasswordData } from '../../store/slices/passwordListSlice/passwordListSlice';
+import createFile from '../../functions/createFile';
 
 const AccessButton = () => {
 	const accessPanelState = useAppSelector((state) => state.accessPanel.state);
 	const accessValues = useAppSelector((state) => state.accessValues);
+	const passwordsListState = useAppSelector(
+		(state) => state.passwordListSlice
+	);
 	const fileName = useAppSelector((state) => state.accessPanel.fileName);
 	const fileData = useAppSelector((state) => state.globalState.fileData);
 	const onEditCombination = useAppSelector(
@@ -36,13 +41,22 @@ const AccessButton = () => {
 			const cryptoDataInstance = new crypto(createKey());
 			try {
 				if (typeof fileData === 'string') {
-					dispatch(setFileData(cryptoDataInstance.decrypt(fileData)));
+					const decryptedData = JSON.parse(
+						JSON.stringify(cryptoDataInstance.decrypt(fileData))
+					);
+					dispatch(setFileData(decryptedData));
+					dispatch(
+						uploadPasswordData({
+							list: decryptedData.passwordsList.list,
+							nextId: decryptedData.passwordsList.nextId,
+						})
+					);
 					dispatch(setAccessPanelState('accessGranted'));
 					setTimeout(() => {
 						if (onEditCombination) {
 							dispatch(setAccessPanelState('edit'));
 						} else {
-							dispatch(setAccessPanelState('normal'));
+							dispatch(setAccessPanelState('disabled'));
 							dispatch(setPanel('manager'));
 						}
 					}, 1000);
@@ -66,42 +80,14 @@ const AccessButton = () => {
 				accessValues.lock[1] !== null &&
 				accessValues.lock[2] !== null
 			) {
-				const key = createKey();
-
-				const cryptoInstance = new crypto('PassMan');
-				const cryptoDataInstance = new crypto(key);
-
-				let textContent = {
-					app: 'password_manager',
-					version: '1.0',
-					data: cryptoDataInstance.encrypt(
-						JSON.stringify({
-							accessValues: {
-								bars: accessValues.bars,
-								lock: accessValues.lock,
-								password: accessValues.password,
-							},
-						})
-					),
-				};
-
-				let content = cryptoInstance.encrypt(textContent);
-				let link = document.createElement('a');
-				document.body.appendChild(link);
-				link.href =
-					'data:text/plain;charset=utf-8,' +
-					encodeURIComponent(content);
-				link.download = fileName + '.pass';
-				link.click();
-				document.body.removeChild(link);
-				link.remove();
-
+				if (onEditCombination)
+					createFile(fileName, accessValues, passwordsListState);
 				dispatch(setAccessPanelState('accessGranted'));
 				setTimeout(() => {
 					if (onEditCombination) {
 						dispatch(setOnEditCombination(false));
 						dispatch(setAccessPanelState('disabled'));
-						dispatch(resetAll());
+						dispatch(resetAccessValues());
 						dispatch(setFileData(null));
 						dispatch(setFileName(''));
 					} else {
