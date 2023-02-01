@@ -1,6 +1,6 @@
 import Led from '../../Components/Led/Led';
 import Button from '../../Components/Button/Button';
-import { MouseEvent, useState, useRef } from 'react';
+import { PointerEvent, useState, useRef } from 'react';
 import './Lock.scss';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
@@ -61,7 +61,7 @@ const Lock = () => {
 			}
 		}
 	};
-	const turnLock = (event: MouseEvent) => {
+	const turnLock = (event: PointerEvent) => {
 		if (lastTimeOut) {
 			clearTimeout(lastTimeOut);
 		}
@@ -85,7 +85,7 @@ const Lock = () => {
 			);
 			const initialPos = position.current;
 
-			const MouseMove = (e: any) => {
+			const PointerMove = (e: any) => {
 				const actualPos = calcAngleDegrees(
 					e.clientX,
 					e.clientY,
@@ -122,15 +122,15 @@ const Lock = () => {
 				lock.style.transform = `rotate(${newPos * step}deg)`;
 				position.current = newPos;
 			};
-			document.addEventListener('mousemove', MouseMove);
-			document.onmouseup = () => {
+			document.addEventListener('pointermove', PointerMove);
+			document.onpointerup = () => {
 				setLastTimeOut(
 					setTimeout(() => {
 						setKey();
 					}, 400)
 				);
-				document.removeEventListener('mousemove', MouseMove);
-				document.onmouseup = null;
+				document.removeEventListener('pointermove', PointerMove);
+				document.onpointerup = null;
 			};
 		}
 	};
@@ -179,7 +179,7 @@ const Lock = () => {
 							})`,
 						}}
 						className="lock__wheel__wheel"
-						onMouseDown={
+						onPointerDown={
 							accessPanelState === 'normal' ||
 							accessPanelState === 'edit'
 								? turnLock

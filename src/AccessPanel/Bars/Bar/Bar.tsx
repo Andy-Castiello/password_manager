@@ -1,5 +1,5 @@
 import './Bar.scss';
-import { MouseEvent, useEffect } from 'react';
+import { PointerEvent, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setBarValue } from '../../../store/slices/accessValues/accessValues';
 
@@ -39,7 +39,7 @@ const Bar = ({ barId }: props) => {
 	useEffect(() => {
 		placeSelector(value);
 	});
-	const moveSelector = (event: MouseEvent) => {
+	const moveSelector = (event: PointerEvent) => {
 		const initialY = event.clientY;
 
 		if (event.target instanceof HTMLDivElement) {
@@ -49,7 +49,7 @@ const Bar = ({ barId }: props) => {
 				getComputedStyle(selector).top
 			);
 
-			const MouseMove = (e: any) => {
+			const PointerMove = (e: any) => {
 				let newPos = initialSelectorPosition + e.clientY - initialY;
 				if (newPos <= convertRemToPixels(min)) {
 					newPos = 0;
@@ -60,10 +60,10 @@ const Bar = ({ barId }: props) => {
 				}
 				dispatch(setBarValue({ barId, value: newPos }));
 			};
-			document.addEventListener('mousemove', MouseMove);
-			document.onmouseup = () => {
-				document.removeEventListener('mousemove', MouseMove);
-				document.onmouseup = null;
+			document.addEventListener('pointermove', PointerMove);
+			document.onpointerup = () => {
+				document.removeEventListener('pointermove', PointerMove);
+				document.onpointerup = null;
 			};
 		}
 	};
@@ -82,7 +82,7 @@ const Bar = ({ barId }: props) => {
 							: ''
 					}`}
 					id={'bar-select' + barId}
-					onMouseDown={
+					onPointerDown={
 						accessPanelState === 'normal' ||
 						accessPanelState === 'edit'
 							? moveSelector

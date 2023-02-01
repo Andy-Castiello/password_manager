@@ -1,11 +1,12 @@
 @import 'variables.scss';
 
-.main-component{
-
-    display: flex;
-    min-height: 100vh;
-    min-width: 100vw;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
+.main-component {
+	display: flex;
+	align-items: center;
+	min-height: 100vh;
+	margin: auto;
+	width: min-content;
+	margin: auto;
+	font-size: 1.5rem;
+	padding: 2rem;
 }

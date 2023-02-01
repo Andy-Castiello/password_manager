@@ -10,7 +10,7 @@
 	box-sizing: border-box;
 	user-select: none;
 	color: $blue-color2;
-	text-shadow: 0 0 10px rgba($blue-color2, .7);
+	text-shadow: 0 0 10px rgba($blue-color2, 0.7);
 }
 html {
 	font-size: 62.5%;
@@ -19,18 +19,32 @@ html {
 body {
 	background-color: $dark-background1;
 }
-.text-input{
-
+.text-input {
 	background-color: $dark-background3;
 	text-shadow: none;
 	outline: none;
 	color: $blue-color1;
 	padding: 1rem;
-	border-radius: .5rem;
+	border-radius: 0.5rem;
 	border: none;
+	font-size: 100%;
 }
-.text--disabled{
-
+.text--disabled {
 	color: $blue-color1;
 	text-shadow: none;
+}
+@media only screen and (max-width: 1200px) {
+	html {
+		font-size: 50%;
+	}
+}
+@media only screen and (max-width: 768px) {
+	html {
+		font-size: 43.75%;
+	}
+}
+@media only screen and (max-width: 600px) {
+	html {
+		font-size: 31.25%;
+	}
 }
