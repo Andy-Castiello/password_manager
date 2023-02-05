@@ -1,6 +1,6 @@
 import Led from '../../Components/Led/Led';
 import Button from '../../Components/Button/Button';
-import { PointerEvent, useState, useRef } from 'react';
+import { MouseEvent, TouchEvent, useState, useRef } from 'react';
 import './Lock.scss';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
@@ -61,7 +61,25 @@ const Lock = () => {
 			}
 		}
 	};
-	const turnLock = (event: PointerEvent) => {
+
+	const turnLock = (
+		actualPos: number,
+		initialAngle: number,
+		initialPos: number,
+		lock: HTMLDivElement
+	) => {
+		let newPos = 0;
+		if (actualPos >= initialAngle) {
+			newPos = Math.floor((actualPos - initialAngle) / step);
+		} else {
+			newPos = Math.floor((actualPos + 360 - initialAngle) / step);
+		}
+		newPos += initialPos;
+		if (newPos >= 60) newPos %= 60;
+		lock.style.transform = `rotate(${newPos * step}deg)`;
+		position.current = newPos;
+	};
+	const handleMouseLock = (event: MouseEvent) => {
 		if (lastTimeOut) {
 			clearTimeout(lastTimeOut);
 		}
@@ -77,7 +95,7 @@ const Lock = () => {
 					lockRect.top + (lockRect.bottom - lockRect.top) / 2
 				),
 			};
-			const initial = calcAngleDegrees(
+			const initialAngle = calcAngleDegrees(
 				event.clientX,
 				event.clientY,
 				center.X,
@@ -85,52 +103,81 @@ const Lock = () => {
 			);
 			const initialPos = position.current;
 
-			const PointerMove = (e: any) => {
-				const actualPos = calcAngleDegrees(
-					e.clientX,
-					e.clientY,
-					center.X,
-					center.Y
-				);
-				let newPos = 0;
-				if (actualPos >= initial) {
-					newPos = Math.floor(
-						(calcAngleDegrees(
-							e.clientX,
-							e.clientY,
+			const onMove = (event: MouseEventInit) => {
+				if (event.clientX && event.clientY) {
+					turnLock(
+						calcAngleDegrees(
+							event.clientX,
+							event.clientY,
 							center.X,
 							center.Y
-						) -
-							initial) /
-							step
-					);
-				} else {
-					newPos = Math.floor(
-						(calcAngleDegrees(
-							e.clientX,
-							e.clientY,
-							center.X,
-							center.Y
-						) +
-							360 -
-							initial) /
-							step
+						),
+						initialAngle,
+						initialPos,
+						lock
 					);
 				}
-				newPos += initialPos;
-				if (newPos >= 60) newPos %= 60;
-				lock.style.transform = `rotate(${newPos * step}deg)`;
-				position.current = newPos;
 			};
-			document.addEventListener('pointermove', PointerMove);
-			document.onpointerup = () => {
+			document.addEventListener('mousemove', onMove);
+			document.onmouseup = () => {
 				setLastTimeOut(
 					setTimeout(() => {
 						setKey();
 					}, 400)
 				);
-				document.removeEventListener('pointermove', PointerMove);
-				document.onpointerup = null;
+				document.removeEventListener('mousemove', onMove);
+				document.onmouseup = null;
+			};
+		}
+	};
+	const handleTouchLock = (event: TouchEvent) => {
+		if (lastTimeOut) {
+			clearTimeout(lastTimeOut);
+		}
+		if (event.target instanceof HTMLDivElement) {
+			const lock = event.target as HTMLDivElement;
+
+			const lockRect = lock.getBoundingClientRect();
+			const center = {
+				X: Math.floor(
+					lockRect.left + (lockRect.right - lockRect.left) / 2
+				),
+				Y: Math.floor(
+					lockRect.top + (lockRect.bottom - lockRect.top) / 2
+				),
+			};
+			const initialAngle = calcAngleDegrees(
+				event.changedTouches[0].clientX,
+				event.changedTouches[0].clientY,
+				center.X,
+				center.Y
+			);
+			const initialPos = position.current;
+
+			const onMove = (event: TouchEventInit) => {
+				if (event.changedTouches) {
+					turnLock(
+						calcAngleDegrees(
+							event.changedTouches[0].clientX,
+							event.changedTouches[0].clientY,
+							center.X,
+							center.Y
+						),
+						initialAngle,
+						initialPos,
+						lock
+					);
+				}
+			};
+			document.addEventListener('touchmove', onMove);
+			document.ontouchend = () => {
+				setLastTimeOut(
+					setTimeout(() => {
+						setKey();
+					}, 400)
+				);
+				document.removeEventListener('touchmove', onMove);
+				document.ontouchend = null;
 			};
 		}
 	};
@@ -179,10 +226,16 @@ const Lock = () => {
 							})`,
 						}}
 						className="lock__wheel__wheel"
-						onPointerDown={
+						onMouseDown={
 							accessPanelState === 'normal' ||
 							accessPanelState === 'edit'
-								? turnLock
+								? handleMouseLock
+								: undefined
+						}
+						onTouchStart={
+							accessPanelState === 'normal' ||
+							accessPanelState === 'edit'
+								? handleTouchLock
 								: undefined
 						}
 					/>

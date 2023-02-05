@@ -1,5 +1,5 @@
 import './Bar.scss';
-import { PointerEvent, useEffect } from 'react';
+import { MouseEvent, TouchEvent, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setBarValue } from '../../../store/slices/accessValues/accessValues';
 
@@ -39,7 +39,22 @@ const Bar = ({ barId }: props) => {
 	useEffect(() => {
 		placeSelector(value);
 	});
-	const moveSelector = (event: PointerEvent) => {
+	const moveSelector = (
+		initialSelectorPosition: number,
+		initialY: number,
+		clientY: number
+	) => {
+		let newPos = initialSelectorPosition + clientY - initialY;
+		if (newPos <= convertRemToPixels(min)) {
+			newPos = 0;
+		} else if (newPos >= convertRemToPixels(length)) {
+			newPos = 100;
+		} else {
+			newPos = Math.floor(newPos / convertRemToPixels(step));
+		}
+		dispatch(setBarValue({ barId, value: newPos }));
+	};
+	const mouseMove = (event: MouseEvent) => {
 		const initialY = event.clientY;
 
 		if (event.target instanceof HTMLDivElement) {
@@ -49,21 +64,41 @@ const Bar = ({ barId }: props) => {
 				getComputedStyle(selector).top
 			);
 
-			const PointerMove = (e: any) => {
-				let newPos = initialSelectorPosition + e.clientY - initialY;
-				if (newPos <= convertRemToPixels(min)) {
-					newPos = 0;
-				} else if (newPos >= convertRemToPixels(length)) {
-					newPos = 100;
-				} else {
-					newPos = Math.floor(newPos / convertRemToPixels(step));
+			const onMove = (e: MouseEventInit) => {
+				if (e.clientY) {
+					moveSelector(initialSelectorPosition, initialY, e.clientY);
 				}
-				dispatch(setBarValue({ barId, value: newPos }));
 			};
-			document.addEventListener('pointermove', PointerMove);
-			document.onpointerup = () => {
-				document.removeEventListener('pointermove', PointerMove);
-				document.onpointerup = null;
+			document.addEventListener('mousemove', onMove);
+			document.onmouseup = () => {
+				document.removeEventListener('mousemove', onMove);
+				document.onmouseup = null;
+			};
+		}
+	};
+	const touchMove = (event: TouchEvent) => {
+		const initialY = event.changedTouches[0].clientY;
+
+		if (event.target instanceof HTMLDivElement) {
+			let selector: HTMLDivElement = event.target;
+
+			const initialSelectorPosition = parseFloat(
+				getComputedStyle(selector).top
+			);
+
+			const onMove = (e: TouchEventInit) => {
+				if (e.changedTouches) {
+					moveSelector(
+						initialSelectorPosition,
+						initialY,
+						e.changedTouches[0].clientY
+					);
+				}
+			};
+			document.addEventListener('touchmove', onMove);
+			document.ontouchend = () => {
+				document.removeEventListener('touchmove', onMove);
+				document.ontouchend = null;
 			};
 		}
 	};
@@ -82,10 +117,16 @@ const Bar = ({ barId }: props) => {
 							: ''
 					}`}
 					id={'bar-select' + barId}
-					onPointerDown={
+					onMouseDown={
 						accessPanelState === 'normal' ||
 						accessPanelState === 'edit'
-							? moveSelector
+							? mouseMove
+							: undefined
+					}
+					onTouchStart={
+						accessPanelState === 'normal' ||
+						accessPanelState === 'edit'
+							? touchMove
 							: undefined
 					}
 				/>
