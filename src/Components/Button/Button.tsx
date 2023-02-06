@@ -3,18 +3,19 @@ import './Button.scss';
 type props = {
 	push?: boolean;
 	children?: React.ReactNode;
+	className?:string;
 	onClick?: Function;
 	state?: 'normal' | 'pressed' | 'disabled';
 };
 
-const Button = ({ children, onClick, state = 'normal' }: props) => {
+const Button = ({ children, onClick, state = 'normal', className}: props) => {
 	const handleClick = () => {
 		if (onClick) onClick();
 	};
 	return (
-		<div
-			className={
-				'button' +
+		<div 
+			className={className+
+				' button' +
 				(state === 'disabled'
 					? ' button--disabled'
 					: state === 'pressed'

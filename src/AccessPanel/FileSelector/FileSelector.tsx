@@ -19,9 +19,6 @@ type state = 'normal' | 'new' | 'edit';
 const FileSelector = () => {
 	const [state, setState] = useState<state>('normal');
 	const accessPanelState = useAppSelector((state) => state.accessPanel.state);
-	/* const globalStateFile = useAppSelector(
-		(state) => state.globalState.fileType
-	); */
 	const panel = useAppSelector((state) => state.globalState.panel);
 	const fileName = useAppSelector((state) => state.accessPanel.fileName);
 	const dispatch = useAppDispatch();
@@ -78,8 +75,6 @@ const FileSelector = () => {
 		}
 		if (state !== 'new') setState('new');
 		else setState('normal');
-		/* if (globalStateFile !== 'new') dispatch(setFileType('new'));
-		else dispatch(setFileType('none')); */
 	};
 	const handleEditClick = () => {
 		if (state !== 'edit') {
