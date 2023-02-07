@@ -69,16 +69,16 @@ const PasswordAccess = () => {
 						}
 					/>
 				</Button>
+				{accessPanelState === 'edit' ? (
+					<input
+						value={confirmPasswordValue}
+						onChange={handleConfirmPassChange}
+						type={passDisplay ? 'text' : 'password'}
+						className="password-access__section__confirm text-input"
+						placeholder="Confirm Password"
+					/>
+				) : undefined}
 			</div>
-			{accessPanelState === 'edit' ? (
-				<input
-					value={confirmPasswordValue}
-					onChange={handleConfirmPassChange}
-					type={passDisplay ? 'text' : 'password'}
-					className="text-input"
-					placeholder="Confirm Password"
-				/>
-			) : undefined}
 		</div>
 	);
 };
