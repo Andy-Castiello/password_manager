@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/password_manager/static/css/main.f9569241.css",
+    "main.js": "/password_manager/static/js/main.f2b35fde.js",
+    "static/media/lock-image.png": "/password_manager/static/media/lock-image.83eb59c2436e66ba48d8.png",
+    "static/media/lock-image-disabled.png": "/password_manager/static/media/lock-image-disabled.10269f2c3b739b31e9e7.png",
+    "index.html": "/password_manager/index.html",
+    "main.f9569241.css.map": "/password_manager/static/css/main.f9569241.css.map",
+    "main.f2b35fde.js.map": "/password_manager/static/js/main.f2b35fde.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f9569241.css",
+    "static/js/main.f2b35fde.js"
+  ]
+}
