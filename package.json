@@ -2,7 +2,8 @@
   "name": "password_manager",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://andy-castiello.github.io/password_manager",
+  "homepage": ".",
+  "main": "electron.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
@@ -15,6 +16,7 @@
     "@types/node": "^17.0.45",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "fs": "^0.0.1-security",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -30,7 +32,8 @@
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "npm run build && electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "electron": "^25.2.0",
     "gh-pages": "^5.0.0",
     "node-sass": "^7.0.3"
   }

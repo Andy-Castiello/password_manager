@@ -2,13 +2,14 @@ import './Button.scss';
 
 type props = {
 	push?: boolean;
+	id?:string;
 	children?: React.ReactNode;
 	className?:string;
 	onClick?: Function;
 	state?: 'normal' | 'pressed' | 'disabled';
 };
 
-const Button = ({ children, onClick, state = 'normal', className}: props) => {
+const Button = ({ children, onClick, state = 'normal', className,id=undefined}: props) => {
 	const handleClick = () => {
 		if (onClick) onClick();
 	};
@@ -22,6 +23,7 @@ const Button = ({ children, onClick, state = 'normal', className}: props) => {
 					? ' button--pressed'
 					: ' button--normal')
 			}
+			id={id}
 			onClick={state !== 'disabled' ? handleClick : undefined}
 		>
 			<span>{children}</span>
