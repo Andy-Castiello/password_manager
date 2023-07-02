@@ -17,7 +17,7 @@ const ManagerButtons = () => {
 	const dispatch = useAppDispatch();
 
 	const handleSave = () => {
-		createFile(fileName, accessValues, passwordsList);
+		/* createFile(fileName, accessValues, passwordsList); */
 		close();
 	};
 	const close = () => {

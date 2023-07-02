@@ -26,15 +26,8 @@ const FileSelector = () => {
     (state) => state.accessPanel.onEditCombination
   );
   const handleFiles = async () => {
-    const dialogConfig = {
-      properties: ["openFile"],
-    };
-
     //@ts-ignore
-    const { path, data } = await window.electron.openDialog(
-      "showOpenDialog",
-      dialogConfig
-    );
+    const { path, data } = await window.electron.fileManagement("open",{});
 
     dispatch(resetAccessValues());
     dispatch(setFileName(path));

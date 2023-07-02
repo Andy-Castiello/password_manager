@@ -1,33 +1,42 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 type SliceType = {
-	state: 'disabled' | 'edit' | 'normal' | 'accessGranted' | 'accessDenied';
-	onEditCombination: boolean;
-	fileName: string;
+  state: "disabled" | "edit" | "normal";
+  access: "granted" | "denied" | "off";
+  onEditCombination: boolean;
+  fileName: string;
 };
 
 const initialState: SliceType = {
-	state: 'disabled',
-	onEditCombination: false,
-	fileName: '',
+  state: "disabled",
+  access: "off",
+  onEditCombination: false,
+  fileName: "",
 };
 
 const accessPanelSlice = createSlice({
-	name: 'accessPanelSlice',
-	initialState,
-	reducers: {
-		setAccessPanelState: (state, action) => {
-			state.state = action.payload;
-		},
-		setFileName: (state, action) => {
-			state.fileName = action.payload;
-		},
-		setOnEditCombination: (state, action) => {
-			state.onEditCombination = action.payload;
-		},
-	},
+  name: "accessPanelSlice",
+  initialState,
+  reducers: {
+    setAccessPanelState: (state, action) => {
+      state.state = action.payload;
+    },
+    setAccessState: (state, action) => {
+      state.access = action.payload;
+    },
+    setFileName: (state, action) => {
+      state.fileName = action.payload;
+    },
+    setOnEditCombination: (state, action) => {
+      state.onEditCombination = action.payload;
+    },
+  },
 });
 
 export default accessPanelSlice.reducer;
-export const { setAccessPanelState, setFileName, setOnEditCombination } =
-	accessPanelSlice.actions;
+export const {
+  setAccessPanelState,
+  setFileName,
+  setOnEditCombination,
+  setAccessState,
+} = accessPanelSlice.actions;
