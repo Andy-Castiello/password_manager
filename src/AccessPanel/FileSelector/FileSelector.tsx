@@ -2,7 +2,7 @@ import Button from "../../Components/Button/Button";
 import "./FileSelector.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   setAccessPanelState,
@@ -27,10 +27,7 @@ const FileSelector = () => {
   );
   const handleFiles = async () => {
     //@ts-ignore
-    const { path, data } = await window.electron.fileManagement("open",{});
-
-    dispatch(resetAccessValues());
-    dispatch(setFileName(path));
+    const { path, data } = await window.electron.fileManagement("open", {});
 
     if (data) {
       const cryptoInstance = new crypto("PassMan");
@@ -39,6 +36,11 @@ const FileSelector = () => {
           const decryptedData = JSON.stringify(cryptoInstance.decrypt(data));
           if (JSON.parse(decryptedData).app === "password_manager") {
             dispatch(setFileData(JSON.parse(decryptedData).data));
+            dispatch(setFileName(path));
+            dispatch(resetAccessValues());
+            dispatch(setAccessPanelState("normal"));
+            setState("normal");
+            dispatch(setOnEditCombination(false));
             dispatch(setAccessPanelState("normal"));
           } else {
             dispatch(setAccessPanelState("disabled"));
@@ -51,9 +53,7 @@ const FileSelector = () => {
       }
     }
   };
-  const handleText = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setFileName(event.target.value));
-  };
+
   const handleNewClick = () => {
     dispatch(resetAccessValues());
     dispatch(setFileName(""));
@@ -99,8 +99,7 @@ const FileSelector = () => {
           type="text"
           className="text-input file-selector__selector__text"
           value={fileName}
-          onChange={handleText}
-          disabled={accessPanelState !== "edit" ? true : false}
+          disabled={true}
         />
         <Button onClick={handleFiles}>
           <FontAwesomeIcon icon={faPaperclip} />

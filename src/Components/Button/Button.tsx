@@ -1,4 +1,5 @@
 import './Button.scss';
+import { MouseEvent } from 'react';
 
 type props = {
 	push?: boolean;
@@ -10,8 +11,8 @@ type props = {
 };
 
 const Button = ({ children, onClick, state = 'normal', className,id=undefined}: props) => {
-	const handleClick = () => {
-		if (onClick) onClick();
+	const handleClick = (event:MouseEvent<HTMLDivElement>) => {
+		if (onClick) onClick(event);
 	};
 	return (
 		<div 

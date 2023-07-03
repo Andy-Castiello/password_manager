@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, clipboard } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
@@ -61,20 +61,33 @@ app.whenReady().then(() => {
         }
         break;
       case "save":
-        try {
-          fs.writeFileSync(config["fileName"], config["data"]);
-          return "success";
-        } catch (error) {
-          return "error";
+        if (config["fileName"]) {
+          try {
+            fs.writeFileSync(config["fileName"], config["data"]);
+            return "success";
+          } catch (error) {
+            return "error";
+          }
         }
       case "saveAs":
+        if (fs.existsSync(configDataPath)) {
+          try {
+            lastPath = JSON.parse(fs.readFileSync(configDataPath, "utf8"))[
+              "lastPath"
+            ];
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        lastPath = lastPath ? path.dirname(lastPath) : app.getPath("documents");
         result = await dialog["showSaveDialog"]({
-          defaultPath: config.fileName,
+          defaultPath: config.fileName ? config.fileName : lastPath,
           filters: [{ name: "Passwords Data", extensions: ["pass"] }],
           properties: ["saveFile"],
         });
         if (!result["canceled"]) {
-          const filePath = result["filePath"].toString();
+          let filePath = result["filePath"].toString();
+          if (!filePath.match(/\.pass$/)) filePath += ".pass";
           try {
             fs.writeFileSync(filePath, config["data"]);
             createConfigData(configDataPath, filePath);
@@ -91,6 +104,9 @@ app.whenReady().then(() => {
       default:
         return;
     }
+  });
+  ipcMain.handle("clipboard", (event, text) => {
+    clipboard.writeText(text);
   });
   createWindow();
 });
