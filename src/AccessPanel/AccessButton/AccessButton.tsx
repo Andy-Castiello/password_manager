@@ -16,6 +16,7 @@ import {
 } from "../../store/slices/accessValues/accessValues";
 import { uploadPasswordData } from "../../store/slices/passwordListSlice/passwordListSlice";
 import createFile from "../../functions/createFile";
+import { useEffect } from "react";
 
 const AccessButton = () => {
   const accessPanelState = useAppSelector((state) => state.accessPanel.state);
@@ -114,13 +115,13 @@ const AccessButton = () => {
           fileName,
           data: createFile(accessValues, passwordsListState),
         });
-      } else {
+      } else if (window.confirm("Are you sure you want to save?")) {
         //@ts-ignore
         response = await window.electron.fileManagement("save", {
           fileName,
           data: createFile(accessValues, passwordsListState),
         });
-      }
+      } else return;
       if (response === "success") {
         alert("The file was successfully saved!");
         dispatch(setOnEditCombination(false));
@@ -142,9 +143,18 @@ const AccessButton = () => {
       }, 1000);
     }
   };
+  useEffect(() => {
+    const enter = (event: KeyboardEvent) => {
+      if (event.key === "Enter") document.getElementById("enter-bind")?.click();
+    };
+    document.addEventListener("keypress", enter);
+    return () => document.removeEventListener("keypress", enter);
+  }, []);
   return accessPanelState === "edit" && onEditCombination ? (
     <div className="access-button-panel">
-      <Button onClick={handleSave}>SAVE</Button>
+      <Button id="enter-bind" onClick={() => handleSave()}>
+        SAVE
+      </Button>
       <Led
         on={accessState !== "off"}
         color={accessState === "granted" ? "GREEN" : "RED"}
@@ -156,6 +166,7 @@ const AccessButton = () => {
       <Button
         onClick={handleDoneClick}
         state={accessPanelState === "disabled" ? "disabled" : undefined}
+        id="enter-bind"
       >
         DONE
       </Button>

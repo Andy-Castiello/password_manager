@@ -2,15 +2,7 @@ const { app, BrowserWindow, dialog, ipcMain, clipboard } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-    },
-  });
-
+const createWindow = (win) => {
   win.loadFile("./build/index.html");
 };
 const configDataPath = app.getPath("documents") + "/Password_Manager/data.dat";
@@ -24,6 +16,14 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 app.whenReady().then(() => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+
   ipcMain.handle("fileManagement", async (event, method, config) => {
     let lastPath = "";
     let result;
@@ -39,7 +39,7 @@ app.whenReady().then(() => {
           }
         }
         lastPath = lastPath ? path.dirname(lastPath) : app.getPath("documents");
-        result = await dialog["showOpenDialog"]({
+        result = await dialog["showOpenDialog"](win, {
           defaultPath: lastPath,
           filters: [{ name: "Passwords Data", extensions: ["pass"] }],
           properties: ["openFile"],
@@ -58,9 +58,11 @@ app.whenReady().then(() => {
             console.log(error);
             return;
           }
+        } else {
+          return { path: "", data: "" };
         }
-        break;
       case "save":
+        console.log(config["fileName"]);
         if (config["fileName"]) {
           try {
             fs.writeFileSync(config["fileName"], config["data"]);
@@ -80,7 +82,7 @@ app.whenReady().then(() => {
           }
         }
         lastPath = lastPath ? path.dirname(lastPath) : app.getPath("documents");
-        result = await dialog["showSaveDialog"]({
+        result = await dialog["showSaveDialog"](win, {
           defaultPath: config.fileName ? config.fileName : lastPath,
           filters: [{ name: "Passwords Data", extensions: ["pass"] }],
           properties: ["saveFile"],
@@ -100,7 +102,6 @@ app.whenReady().then(() => {
           return "canceled";
         }
 
-        break;
       default:
         return;
     }
@@ -108,5 +109,5 @@ app.whenReady().then(() => {
   ipcMain.handle("clipboard", (event, text) => {
     clipboard.writeText(text);
   });
-  createWindow();
+  createWindow(win);
 });
